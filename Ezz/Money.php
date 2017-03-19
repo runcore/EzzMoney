@@ -13,16 +13,26 @@ abstract class Money {
      * Money constructor.
      * @param $summa
      */
-    public function __construct( $summa ) {
+    public function __construct( $summa=null ) {
+        if (!is_null($summa)) {
+            $this->setSumma($summa);
+        }
+    }
+
+    /**
+     * @param $summa
+     * @throws \Exception
+     */
+    protected function setSumma($summa) {
         $summa = trim($summa);
-        if ( !is_numeric($summa) ) {
+        if (!is_numeric($summa)) {
             throw new \Exception('Expected number');
         }
-        if ( !preg_match('/^([0-9]){1,12}(\.|$)/', $summa) ) {
-            throw new \Exception('Expected input values less than 1`000`000`000.00 but '.number_format($summa,2,'.','`') );
+        if (!preg_match('/^([0-9]){1,12}(\.|$)/', $summa)) {
+            throw new \Exception('Expected input values less than 1`000`000`000.00 but ' . number_format($summa, 2, '.', '`'));
         }
         // Save only two digits after separator
-        $summa = preg_replace('/^([0-9]+(?:\.[0-9]{1,2})?).*/','$1', $summa );
+        $summa = preg_replace('/^([0-9]+(?:\.[0-9]{1,2})?).*/', '$1', $summa);
 
         $this->summa = $summa;
     }
@@ -54,6 +64,6 @@ abstract class Money {
         return $f5;
     }
 
-    abstract public function asText();
+    abstract public function asText($summa=null);
 
 }

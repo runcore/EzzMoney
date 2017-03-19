@@ -51,10 +51,14 @@ class MoneyRU extends Money {
     ];
 
     /**
-     * Convert Summ to Text
+     * Convert Money value to Text
+     * @param null $summa
      * @return string
      */
-    public function asText() {
+    public function asText($summa=null) {
+        if (!is_null($summa)) {
+            $this->setSumma($summa);
+        }
         $out = array();
         list($rub,$kop) = explode('.',sprintf("%015.2f", floatval($this->summa)) );
         if (intval($rub)>0) {
@@ -78,12 +82,12 @@ class MoneyRU extends Money {
                 $out[]= $this->morph($triad, $this->units[$unitKey]);
             } //foreach
         } else {
-            $uniKeyRub = sizeof($this->units) - 2;
-            $out[] = $this->zero.' '.$this->morph(0,$this->units[$uniKeyRub]);
+            $unitKeyRub = sizeof($this->units) - 2;
+            $out[] = $this->zero.' '.$this->morph(0,$this->units[$unitKeyRub]);
         }
         // add kop
-        $uniKeyKop = sizeof($this->units) - 1;
-        $out[] = $kop.' '.$this->morph($kop,$this->units[$uniKeyKop]);
+        $unitKeyKop = sizeof($this->units) - 1;
+        $out[] = $kop.' '.$this->morph($kop,$this->units[$unitKeyKop]);
 
         return trim(preg_replace('/ {2,}/', ' ', join(' ',$out)));
     }
